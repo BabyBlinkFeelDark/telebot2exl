@@ -1,5 +1,6 @@
 import os
 import time
+import logging
 from datetime import datetime
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ConversationHandler, MessageHandler, filters, ContextTypes
@@ -16,6 +17,17 @@ LOGIN, PASSWORD = range(2)
 
 load_dotenv()
 
+# Настройка логирования
+logging.basicConfig(
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    level=logging.INFO,  # Уровень логирования (можно изменить на DEBUG для более детализированных логов)
+    handlers=[
+        logging.FileHandler('bot.log'),  # Запись в файл 'bot.log'
+        logging.StreamHandler()  # Также вывод в консоль
+    ]
+)
+logger = logging.getLogger(__name__)
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
@@ -28,6 +40,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     Returns:
         None
     """
+    logger.info(f"Received /start command from {update.message.chat_id}")
     await update.message.reply_text('Привет! Я бот. Чем могу помочь?')
 
 
@@ -42,6 +55,7 @@ async def login(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Returns:
         int: Состояние для ConversationHandler (LOGIN).
     """
+    logger.info(f"User {update.message.chat_id} initiated login process.")
     await update.message.reply_text('Напиши логин')
     return LOGIN  # Переходим к состоянию LOGIN
 
@@ -59,6 +73,7 @@ async def get_login(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
     user_login = update.message.text
     context.user_data['user_login'] = user_login  # Сохраняем логин
+    logger.info(f"User {update.message.chat_id} entered login: {user_login}")
     await update.message.reply_text('Напиши пароль')
     return PASSWORD  # Переходим к состоянию PASSWORD
 
@@ -78,10 +93,12 @@ async def get_password(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     user_login = context.user_data.get('user_login')  # Получаем логин, который был введен ранее
 
     if user_login != os.getenv("LOGIN_USER") or user_pass != os.getenv("LOGIN_PASSWORD"):
+        logger.warning(f"Failed login attempt for user {update.message.chat_id}")
         await update.message.reply_text('Неправильный логин или пароль')
         return ConversationHandler.END  # Завершаем разговор
     else:
         context.user_data["authenticated"] = True  # Помечаем пользователя как авторизованного
+        logger.info(f"User {update.message.chat_id} successfully authenticated")
         await update.message.reply_text('Авторизация прошла успешно')
         return ConversationHandler.END  # Завершаем разговор
 
@@ -97,6 +114,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Returns:
         int: Завершение разговора (ConversationHandler.END).
     """
+    logger.info(f"User {update.message.chat_id} cancelled the login process.")
     await update.message.reply_text('Авторизация отменена')
     return ConversationHandler.END
 
@@ -114,13 +132,16 @@ async def target_file(update: Update, context: ContextTypes.DEFAULT_TYPE, file2e
         None
     """
     file_path = os.path.join(os.getcwd(), 'data', file2exp)
+    logger.info(f"Attempting to send file {file2exp} to user {update.message.chat_id}")
 
     # Проверяем, существует ли файл
     if os.path.exists(file_path):
         # Отправляем файл пользователю
         with open(file_path, 'rb') as file:
             await update.message.reply_document(document=file)
+        logger.info(f"File {file2exp} successfully sent to user {update.message.chat_id}")
     else:
+        logger.error(f"File {file2exp} not found for user {update.message.chat_id}")
         await update.message.reply_text('Файл не найден.')
 
 
@@ -136,9 +157,11 @@ async def export(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         int: Состояние для ConversationHandler (ST_POINT).
     """
     if context.user_data.get("authenticated"):  # Проверяем, авторизован ли пользователь
+        logger.info(f"User {update.message.chat_id} initiated export process.")
         await update.message.reply_text('Укажи диапазон в формате "st_p-end_p", например: 14-17')
         return ST_POINT  # Переходим к состоянию для обработки диапазона
     else:
+        logger.warning(f"Unauthorized access attempt by user {update.message.chat_id}")
         await update.message.reply_text('Для доступа к этой команде необходимо авторизоваться!')
         return ConversationHandler.END
 
@@ -171,6 +194,7 @@ async def get_st_and_end_points(update: Update, context: ContextTypes.DEFAULT_TY
         file_name = f"courier_data_{st_point}-{end_point}.xlsx"
 
         # Отправляем сообщение о процессе формирования файла
+        logger.info(f"Generating file {file_name} for user {update.message.chat_id}")
         await update.message.reply_text(f'Формирую файл: {file_name}')
         export2xlsx(file_name, st_point, end_point)
         time.sleep(5)
@@ -178,13 +202,14 @@ async def get_st_and_end_points(update: Update, context: ContextTypes.DEFAULT_TY
 
         return ConversationHandler.END  # Завершаем разговор
     except ValueError as e:
+        logger.error(f"Invalid input from user {update.message.chat_id}: {e}")
         await update.message.reply_text(f'Ошибка: {e}. Попробуй снова указать диапазон в формате "st_p-end_p".')
         return ST_POINT  # Если ошибка, просим пользователя ввести диапазон снова
 
 
 async def take_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Обрабатывает все сообщения от пользователя и выводит их в консоль.
+    Логирует все сообщения, которые поступают от пользователя.
 
     Args:
         update (Update): Объект обновления, содержащий информацию о сообщении.
@@ -194,7 +219,7 @@ async def take_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         None
     """
     user_message = update.message.text
-    print(user_message)
+    logger.info(f"User {update.message.chat_id} sent message: {user_message}")
 
 
 app = ApplicationBuilder().token(os.getenv("TOKEN")).build()
@@ -231,6 +256,6 @@ scheduler.start()
 # Команды
 app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(Text(), take_message))
-print("Бот запущен...")
+logger.info("Bot started...")
 
 app.run_polling()

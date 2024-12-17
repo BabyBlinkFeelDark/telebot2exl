@@ -19,6 +19,7 @@ isort = "^5.13.2"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
 pytest-cov = "^6.0.0"
+logging = "^0.4.9.6"
 
 
 [tool.poetry.group.web.dependencies]
