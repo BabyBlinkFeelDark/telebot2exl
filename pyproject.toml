@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "telebot"
+version = "0.1.0"
+description = ""
+authors = ["Oleg Lomtev <lomtev.oa@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[tool.poetry.group.lint.dependencies]
+mypy = "^1.13.0"
+black = "^24.10.0"
+flake8 = "^7.1.1"
+isort = "^5.13.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+pytest-cov = "^6.0.0"
+
+
+[tool.poetry.group.web.dependencies]
+requests = "^2.32.3"
+
+
+
+[tool.poetry.group.export.dependencies]
+pandas = "^2.2.3"
+openpyxl = "^3.1.5"
+
+
+[tool.poetry.group.PGSQL.dependencies]
+psycopg2 = "^2.9.10"
+
+
+[tool.poetry.group.bot.dependencies]
+python-telegram-bot = "^21.9"
+
+
+[tool.poetry.group.env.dependencies]
+python-dotenv = "^1.0.1"
+
+
+[tool.poetry.group.planner.dependencies]
+apscheduler = "^3.11.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.mypy]
+disallow_untyped_defs = true
+warn_return_any = true
+exclude = 'venv'
+
+[tool.black]
+line-length = 119
+exclude = '.git'
+
+[tool.isort]
+line_length = 119
