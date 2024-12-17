@@ -4,7 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dcb54d01-dff3-4abf-ad3e-e53af91387ed" name="Changes" comment="" />
+    <list default="true" id="dcb54d01-dff3-4abf-ad3e-e53af91387ed" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.flake8" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/homework.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/pars_dashbord.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/courier_data_14-18.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/courier_data_15-20.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/courier_data_18-20.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/courier_data_19-22.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/courier_data_20-23.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/courier_data_7-14.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bot_db.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/export.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/g_collector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,12 +55,12 @@
     &quot;assignee&quot;: &quot;BabyBlinkFeelDark&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/BabyBlinkFeelDark/bank-widget.git&quot;,
-    &quot;accountId&quot;: &quot;7aeb3889-1863-47ba-893f-c8350e5575f1&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/BabyBlinkFeelDark/telebot2exl.git",
+    "accountId": "7aeb3889-1863-47ba-893f-c8350e5575f1"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -48,23 +72,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.Python tests in test_mask.py.executor": "Run",
-    "Python tests.Python tests in test_widget.py.executor": "Run",
-    "Python.bot_db.executor": "Run",
-    "Python.export.executor": "Run",
-    "Python.g_collector.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.mask.executor": "Run",
-    "Python.processing.executor": "Run",
-    "Python.widget.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/babyblinkfeeldark/PycharmProjects/samocat_bot",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.Python tests in test_mask.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_widget.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.bot_db.executor&quot;: &quot;Run&quot;,
+    &quot;Python.export.executor&quot;: &quot;Run&quot;,
+    &quot;Python.g_collector.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mask.executor&quot;: &quot;Run&quot;,
+    &quot;Python.processing.executor&quot;: &quot;Run&quot;,
+    &quot;Python.widget.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/babyblinkfeeldark/PycharmProjects/samocat_bot&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="homework" />

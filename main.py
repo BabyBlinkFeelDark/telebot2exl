@@ -17,21 +17,63 @@ LOGIN, PASSWORD = range(2)
 load_dotenv()
 
 
-
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Обрабатывает команду '/start'. Отправляет приветственное сообщение пользователю.
+
+    Args:
+        update (Update): Объект обновления, содержащий информацию о сообщении.
+        context (ContextTypes.DEFAULT_TYPE): Контекст, содержащий данные о текущем разговоре.
+
+    Returns:
+        None
+    """
     await update.message.reply_text('Привет! Я бот. Чем могу помочь?')
 
+
 async def login(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """
+    Обрабатывает команду '/login'. Запрашивает у пользователя логин.
+
+    Args:
+        update (Update): Объект обновления, содержащий информацию о сообщении.
+        context (ContextTypes.DEFAULT_TYPE): Контекст, содержащий данные о текущем разговоре.
+
+    Returns:
+        int: Состояние для ConversationHandler (LOGIN).
+    """
     await update.message.reply_text('Напиши логин')
     return LOGIN  # Переходим к состоянию LOGIN
 
+
 async def get_login(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """
+    Получает логин от пользователя и запрашивает пароль.
+
+    Args:
+        update (Update): Объект обновления, содержащий информацию о сообщении.
+        context (ContextTypes.DEFAULT_TYPE): Контекст, содержащий данные о текущем разговоре.
+
+    Returns:
+        int: Состояние для ConversationHandler (PASSWORD).
+    """
     user_login = update.message.text
     context.user_data['user_login'] = user_login  # Сохраняем логин
     await update.message.reply_text('Напиши пароль')
     return PASSWORD  # Переходим к состоянию PASSWORD
 
+
 async def get_password(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """
+    Получает пароль от пользователя и проверяет авторизацию.
+
+    Args:
+        update (Update): Объект обновления, содержащий информацию о сообщении.
+        context (ContextTypes.DEFAULT_TYPE): Контекст, содержащий данные о текущем разговоре.
+
+    Returns:
+        int: Статус завершения разговора или продолжения в зависимости от проверки логина и пароля.
+    """
     user_pass = update.message.text
     user_login = context.user_data.get('user_login')  # Получаем логин, который был введен ранее
 
@@ -43,24 +85,56 @@ async def get_password(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
         await update.message.reply_text('Авторизация прошла успешно')
         return ConversationHandler.END  # Завершаем разговор
 
+
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """
+    Обрабатывает команду '/cancel'. Завершает процесс авторизации и завершает разговор.
+
+    Args:
+        update (Update): Объект обновления, содержащий информацию о сообщении.
+        context (ContextTypes.DEFAULT_TYPE): Контекст, содержащий данные о текущем разговоре.
+
+    Returns:
+        int: Завершение разговора (ConversationHandler.END).
+    """
     await update.message.reply_text('Авторизация отменена')
     return ConversationHandler.END
 
+
 async def target_file(update: Update, context: ContextTypes.DEFAULT_TYPE, file2exp):
+    """
+    Отправляет файл пользователю, если файл существует.
+
+    Args:
+        update (Update): Объект обновления, содержащий информацию о сообщении.
+        context (ContextTypes.DEFAULT_TYPE): Контекст, содержащий данные о текущем разговоре.
+        file2exp (str): Имя файла, который нужно отправить пользователю.
+
+    Returns:
+        None
+    """
     file_path = os.path.join(os.getcwd(), 'data', file2exp)
 
-        # Проверяем, существует ли файл
+    # Проверяем, существует ли файл
     if os.path.exists(file_path):
-            # Отправляем файл пользователю
+        # Отправляем файл пользователю
         with open(file_path, 'rb') as file:
             await update.message.reply_document(document=file)
     else:
-            await update.message.reply_text('Файл не найден.')
+        await update.message.reply_text('Файл не найден.')
 
 
-# Команда /export доступна только авторизованным пользователям
 async def export(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """
+    Обрабатывает команду '/export'. Запрашивает у пользователя диапазон для формирования отчета.
+
+    Args:
+        update (Update): Объект обновления, содержащий информацию о сообщении.
+        context (ContextTypes.DEFAULT_TYPE): Контекст, содержащий данные о текущем разговоре.
+
+    Returns:
+        int: Состояние для ConversationHandler (ST_POINT).
+    """
     if context.user_data.get("authenticated"):  # Проверяем, авторизован ли пользователь
         await update.message.reply_text('Укажи диапазон в формате "st_p-end_p", например: 14-17')
         return ST_POINT  # Переходим к состоянию для обработки диапазона
@@ -68,7 +142,18 @@ async def export(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         await update.message.reply_text('Для доступа к этой команде необходимо авторизоваться!')
         return ConversationHandler.END
 
+
 async def get_st_and_end_points(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """
+    Получает диапазон от пользователя и генерирует файл с данными.
+
+    Args:
+        update (Update): Объект обновления, содержащий информацию о сообщении.
+        context (ContextTypes.DEFAULT_TYPE): Контекст, содержащий данные о текущем разговоре.
+
+    Returns:
+        int: Завершение разговора или повторный запрос диапазона в случае ошибки.
+    """
     try:
         # Получаем сообщение от пользователя и парсим его
         user_input = update.message.text.strip()
@@ -96,9 +181,21 @@ async def get_st_and_end_points(update: Update, context: ContextTypes.DEFAULT_TY
         await update.message.reply_text(f'Ошибка: {e}. Попробуй снова указать диапазон в формате "st_p-end_p".')
         return ST_POINT  # Если ошибка, просим пользователя ввести диапазон снова
 
+
 async def take_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Обрабатывает все сообщения от пользователя и выводит их в консоль.
+
+    Args:
+        update (Update): Объект обновления, содержащий информацию о сообщении.
+        context (ContextTypes.DEFAULT_TYPE): Контекст, содержащий данные о текущем разговоре.
+
+    Returns:
+        None
+    """
     user_message = update.message.text
     print(user_message)
+
 
 app = ApplicationBuilder().token(os.getenv("TOKEN")).build()
 
@@ -135,6 +232,5 @@ scheduler.start()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(Text(), take_message))
 print("Бот запущен...")
-
 
 app.run_polling()
